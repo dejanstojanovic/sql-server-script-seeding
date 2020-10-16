@@ -1,45 +1,60 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EntityFrameworkCore.SqlServer.Seeding.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sample.Seeding.Data.Infrastructure.Constants;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 
-namespace Sample.Seeding.Data.Infrastructure.Extensions
+namespace EntityFrameworkCore.SqlServer.Seeding.Extensions
 {
-    public static class DbContextExtensions
+    /// <summary>
+    /// SQL server script seeding extensions
+    /// </summary>
+    public static class SeedingExtensions
     {
-        public static void AddEmployeesDbContext(this IServiceCollection services, IConfiguration configuration)
+        /// <summary>
+        /// Enables script seeding
+        /// </summary>
+        /// <param name="services">Services collection</param>
+        /// <param name="connectionString">Database connection string</param>
+        public static void AddScriptSeeding(this IServiceCollection services, String connectionString)
         {
-            services.AddDbContext<EmployeesDatabaseContext>(options =>
+            services.AddDbContext<SeedingDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString(DbContextConfigConstants.DB_CONNECTION_CONFIG_NAME),
+                options.UseSqlServer(connectionString,
                     x =>
                     {
-                        x.MigrationsHistoryTable("__EFMigrationsHistory");
-                        x.MigrationsAssembly(typeof(DbContextExtensions).Assembly.GetName().Name);
+                        x.MigrationsAssembly(typeof(SeedingExtensions).Assembly.GetName().Name);
                     }
                 );
             });
         }
 
-        public static void SeedEmployeesData(this IApplicationBuilder app, IConfiguration configuration)
+        /// <summary>
+        /// Seeds scripts
+        /// </summary>
+        /// <param name="app">Application builder instance</param>
+        /// <param name="seedingAssembly">Assembly containing scripts</param>
+        /// <param name="resourceFolder">Folder inside the project were scripts are located</param>
+        public static void SeedFromScripts(this IApplicationBuilder app, Assembly seedingAssembly, String resourceFolder = "Seedings")
         {
             using (var serviceScope = app.ApplicationServices
                 .GetRequiredService<IServiceScopeFactory>()
                 .CreateScope())
             {
-                using (var context = serviceScope.ServiceProvider.GetService<EmployeesDatabaseContext>())
+                using (var context = serviceScope.ServiceProvider.GetService<SeedingDbContext>())
                 {
                     context.Database.Migrate();
-
-                    var assembly = typeof(DbContextExtensions).Assembly;
-                    var files = assembly.GetManifestResourceNames();
+                    var files = seedingAssembly.GetManifestResourceNames();
 
                     var executedSeedings = context.SeedingEntries.ToArray();
-                    var filePrefix = $"{assembly.GetName().Name}.Seedings.";
+                    var folderPathSegment = !String.IsNullOrWhiteSpace(resourceFolder) ? $"{resourceFolder}." : String.Empty;
+                    var filePrefix = $"{seedingAssembly.GetName().Name}.{folderPathSegment}";
                     foreach (var file in files.Where(f => f.StartsWith(filePrefix) && f.EndsWith(".sql"))
                                               .Select(f => new
                                               {
@@ -50,9 +65,9 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
                     {
                         if (executedSeedings.Any(e => e.Name == file.LogicalFile))
                             continue;
-
+                        
                         string command = string.Empty;
-                        using (Stream stream = assembly.GetManifestResourceStream(file.PhysicalFile))
+                        using (Stream stream = seedingAssembly.GetManifestResourceStream(file.PhysicalFile))
                         {
                             using (StreamReader reader = new StreamReader(stream))
                             {
@@ -68,11 +83,11 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
                             try
                             {
                                 context.Database.ExecuteSqlRaw(command);
-                                context.SeedingEntries.Add(new Entities.SeedingEntry() { Name = file.LogicalFile });
+                                context.SeedingEntries.Add(new SeedingEntry() { Name = file.LogicalFile });
                                 context.SaveChanges();
                                 transaction.Commit();
                             }
-                            catch 
+                            catch
                             {
                                 transaction.Rollback();
                                 throw;
