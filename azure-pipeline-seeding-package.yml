@@ -30,10 +30,18 @@ steps:
     versioningScheme: 'off'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Push to Azure Artifact'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
     nuGetFeedType: 'internal'
     publishVstsFeed: 'a75990cd-7350-4a40-8894-3fb9ec5869c1/b404b18e-3c67-48c1-90ee-bf3ada61ef30'
 
-
+- task: DotNetCoreCLI@2
+  enabled: false
+  displayName: 'Push to nuget.org'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'NuGet.org'
