@@ -16,14 +16,18 @@ steps:
 
 - task: DotNetCoreCLI@2
   enabled: false
+  displayName: "Build project"
   inputs:
     command: 'build'
     projects: '**/src/EntityFrameworkCore.SqlServer.Seeding/EntityFrameworkCore.SqlServer.Seeding.csproj'
     
 
 - task: DotNetCoreCLI@2
+  displayName: "Pack NuGet package"
   inputs:
     command: 'pack'
     packagesToPack: '**/src/EntityFrameworkCore.SqlServer.Seeding/EntityFrameworkCore.SqlServer.Seeding.csproj'
     versioningScheme: 'off'
+
+
 
