@@ -23,7 +23,7 @@
     <PackageType>.NET CLI global tool</PackageType>
 
     <!-- Generate NuGet package (.nupkg) file in output (bin) folder on build -->
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!-- <GeneratePackageOnBuild>true</GeneratePackageOnBuild> -->
 
   </PropertyGroup>
 
