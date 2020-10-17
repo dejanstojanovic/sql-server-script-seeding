@@ -40,9 +40,7 @@ namespace Sample.Seeding.Api
 
             app.MigrateEmployeesData(Configuration);
 
-            app.SeedFromScripts(typeof(EmployeesDatabaseContext).Assembly);
-
-
+            app.SeedFromScripts(typeof(EmployeesDatabaseContext).Assembly, "Seedings");
 
             app.UseHttpsRedirection();
             app.UseRouting();
