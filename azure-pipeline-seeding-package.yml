@@ -20,7 +20,8 @@ steps:
   displayName: "Build project"
   inputs:
     command: 'build'
-    projects: '**/src/EntityFrameworkCore.SqlServer.Seeding/EntityFrameworkCore.SqlServer.Seeding.csproj'   
+    projects: '**/src/EntityFrameworkCore.SqlServer.Seeding/EntityFrameworkCore.SqlServer.Seeding.csproj'
+    configuration: $(buildConfiguration)   
 
 - task: DotNetCoreCLI@2
   displayName: "Pack NuGet package"
