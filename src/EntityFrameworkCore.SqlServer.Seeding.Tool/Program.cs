@@ -66,15 +66,26 @@ namespace EntityFrameworkCore.SqlServer.Seeding.Tool
                     string FindProject(string folder)
                     {
                         var files = Directory.GetFiles(folder, "*.csproj");
-                        if (files == null || !files.Any())
-                            if (Directory.GetParent(folder) == null)
-                                throw new ArgumentException(paramName: "project", message: "Project file not found!");
+                        try
+                        {
+                            if (files == null || !files.Any())
+                                if (Directory.GetParent(folder) == null)
+                                    throw new ArgumentException(paramName: "project", message: "Project file not found!");
+                                else
+                                    return FindProject(Directory.GetParent(folder).FullName);
+                            else if (files.Length > 1)
+                                throw new ArgumentException(paramName: "project", message: "More than one project found!");
                             else
-                                return FindProject(Directory.GetParent(folder).FullName);
-                        else if (files.Length > 1)
-                            throw new ArgumentException(paramName: "project", message: "More than one project found!");
-                        else
-                            return files.Single();
+                                return files.Single();
+                        }
+                        catch(Exception ex)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(ex.Message);
+                            Console.ResetColor();
+                            File.Delete(outputFilePath);
+                            throw;
+                        }
                     }
 
                     void UpdateProject(String projectFilename, String seedingScriptFilename)
@@ -119,7 +130,10 @@ namespace EntityFrameworkCore.SqlServer.Seeding.Tool
                     UpdateProject(projectFile, outputFilePath);
                     #endregion
 
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"Created seeding script file: {outputFilePath}");
+                    Console.ResetColor();
+                    
 
                     return 0;
                 });
