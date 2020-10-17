@@ -7,7 +7,8 @@ trigger:
 - master
 
 pool:
-  name: 'DEJAN-PC'
+  #name: 'DEJAN-PC'
+  vmImage: 'windows-latest'
 
 variables:
   buildConfiguration: 'Release'
