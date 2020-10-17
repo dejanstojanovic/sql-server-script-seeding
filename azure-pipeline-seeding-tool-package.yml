@@ -30,6 +30,7 @@ steps:
     versioningScheme: 'off'
 
 - task: DotNetCoreCLI@2
+  enabled: true
   displayName: 'Push to Azure Artifact'
   inputs:
     command: 'push'
