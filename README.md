@@ -2,13 +2,13 @@
 
 ## Overview
 
-Allows you to seed the data to SQL Server database using pure SQL scripts but in a managed fashion similar to Entity Framework Core migrations
+Allows you to seed the data to SQL Server database using pure SQL scripts but in a managed fashion similar to Entity Framework Core migrations.
+More details on the logic how seeding works you can read in [Seeding data in EF Core using SQL scripts](https://dejanstojanovic.net/aspnet/2020/september/seeding-data-in-ef-core-using-sql-scripts/) article.
+Details about the global tool logic can be found in article [Building and using advanced .NET Core CLI global tools](https://dejanstojanovic.net/aspnet/2020/september/building-and-using-advanced-net-core-cli-global-tools/).
 
 ## Usage
 ### Invoking the seeding
-To use SQL script seeding with EF Core and targeting SQL Server database you need to bring in the NuGet package which contains extension methods for dependency injection and ASP.NET Core pipeline.
-
-NOTE: For now, only .NET Core native dependency injection is supported. Hopefully if the package is popular other DI containers support will be there
+To use SQL script seeding with EF Core and targeting SQL Server database you need to bring in the NuGet package [EntityFrameworkCore.SqlServer.Seeding](https://www.nuget.org/packages/EntityFrameworkCore.SqlServer.Seeding/) which contains extension methods for dependency injection and ASP.NET Core pipeline.
 
 ```
 dotnet add package EntityFrameworkCore.SqlServer.Seeding
@@ -37,7 +37,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 ```
 
 ### Adding new seeding script
-As a first step you need to install global tool which will help you add the seeding script to the project where you want to have your seeding scripts.
+As a first step you need to install global tool [EntityFrameworkCore.SqlServer.Seeding.Tool](https://www.nuget.org/packages/EntityFrameworkCore.SqlServer.Seeding.Tool/) which will help you add the seeding script to the project where you want to have your seeding scripts.
 I usually keep them together with migrations as a part of infrastructure.
 
 ```
