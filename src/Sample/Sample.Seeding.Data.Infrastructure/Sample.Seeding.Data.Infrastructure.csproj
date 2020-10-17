@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
@@ -22,5 +22,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sample.Seeding.Domain\Sample.Seeding.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup Label="seeding">
+    <None Remove="Seedings\20201017235255_Add_Initial_Employees.sql" />
+    <EmbeddedResource Include="Seedings\20201017235255_Add_Initial_Employees.sql" />
+  </ItemGroup>
+  <ItemGroup Label="seeding">
+    <None Remove="Seedings\20201017235342_Add_More_Employees.sql" />
+    <EmbeddedResource Include="Seedings\20201017235342_Add_More_Employees.sql" />
   </ItemGroup>
 </Project>

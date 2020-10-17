@@ -1,0 +1,1 @@
+INSERT INTO Employees(Id, FirstName, LastName, Email) VALUES (NEWID(), 'Kevin', 'Brown', 'k.brown@sample.com')
