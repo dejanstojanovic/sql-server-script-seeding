@@ -3,26 +3,35 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-#trigger:
-#- master
+trigger:
+- master
 
 pool:
-  vmImage: 'ubintu-latest'
+  #name: 'DEJAN-PC'
+  vmImage: 'windows-latest'
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
 
+- task: UseDotNet@2
+  displayName: "Use .NET Core sdk"
+  inputs:
+    packageType: sdk
+    version: 3.1.403
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
 - task: DotNetCoreCLI@2
-  enabled: false
+  enabled: true
   displayName: "Build project"
   inputs:
     command: 'build'
     projects: '**/src/EntityFrameworkCore.SqlServer.Seeding/EntityFrameworkCore.SqlServer.Seeding.Tool.csproj'
-    
+    configuration: $(buildConfiguration)
 
 - task: DotNetCoreCLI@2
+  enabled: false
   displayName: "Pack NuGet package"
   inputs:
     command: 'pack'
@@ -30,18 +39,10 @@ steps:
     versioningScheme: 'off'
 
 - task: DotNetCoreCLI@2
+  enabled: true
   displayName: 'Push to Azure Artifact'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
     nuGetFeedType: 'internal'
     publishVstsFeed: 'a75990cd-7350-4a40-8894-3fb9ec5869c1/b404b18e-3c67-48c1-90ee-bf3ada61ef30'
-
-- task: DotNetCoreCLI@2
-  enabled: false
-  displayName: 'Push to nuget.org'
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'NuGet.org'

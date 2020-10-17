@@ -7,12 +7,14 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildThisFileName).xml</DocumentationFile>
     <ProjectGuid>{2F1B4957-3AE6-42C9-89FB-E852FDC97B95}</ProjectGuid>
     <PackageId>EntityFrameworkCore.SqlServer.Seeding</PackageId>
-    <Version>1.0.0</Version>
+    <Version>0.9.1</Version>
     <Authors>Dejan Stojanovic</Authors>
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://bit.ly/3k6FUC9</PackageIconUrl>
     <!-- Icon origin: https://freeicons.io/sustainable-energy-2/plant-icon-25213 -->
     <Description>CLI tool for SQL Server script seeding for Entity Framework Core</Description>
+    <PackageProjectUrl>https://github.com/dejanstojanovic/sql-server-script-seeding</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dejanstojanovic/sql-server-script-seeding</RepositoryUrl>
     
     <!-- Output .exe file name (needs to follow global tool naming) -->
     <AssemblyName>script-seeding</AssemblyName>
@@ -23,7 +25,7 @@
     <PackageType>.NET CLI global tool</PackageType>
 
     <!-- Generate NuGet package (.nupkg) file in output (bin) folder on build -->
-    <!-- <GeneratePackageOnBuild>true</GeneratePackageOnBuild> -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
   </PropertyGroup>
 
