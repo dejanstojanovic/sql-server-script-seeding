@@ -15,13 +15,12 @@ variables:
 steps:
 
 - task: DotNetCoreCLI@2
-  enabled: false
+  enabled: true
   displayName: "Build project"
   inputs:
     command: 'build'
     projects: '**/src/EntityFrameworkCore.SqlServer.Seeding/EntityFrameworkCore.SqlServer.Seeding.Tool.csproj'
     configuration: $(buildConfiguration)
-
 
 - task: DotNetCoreCLI@2
   enabled: false
