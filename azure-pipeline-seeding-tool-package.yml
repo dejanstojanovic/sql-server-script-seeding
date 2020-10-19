@@ -32,14 +32,6 @@ steps:
 
 - task: DotNetCoreCLI@2
   enabled: false
-  displayName: "Pack NuGet package"
-  inputs:
-    command: 'pack'
-    packagesToPack: '**/src/EntityFrameworkCore.SqlServer.Seeding/EntityFrameworkCore.SqlServer.Seeding.Tool.csproj'
-    versioningScheme: 'off'
-
-- task: DotNetCoreCLI@2
-  enabled: true
   displayName: 'Push to Azure Artifact'
   inputs:
     command: 'push'
