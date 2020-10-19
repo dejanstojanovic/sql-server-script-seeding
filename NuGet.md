@@ -1,5 +1,6 @@
 This package allows you to seed the data to SQL Server database using pure SQL scripts but in a managed fashion similar to Entity Framework Core migrations.
 
+
 ### Invoking the seeding
 Install NuGet package to your project
 
