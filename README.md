@@ -10,6 +10,7 @@ Details about the global tool logic can be found in article [Building and using 
 ## Usage
 ### Invoking the seeding
 To use SQL script seeding with EF Core and targeting SQL Server database you need to bring in the NuGet package [EntityFrameworkCore.SqlServer.Seeding](https://www.nuget.org/packages/EntityFrameworkCore.SqlServer.Seeding/) which contains extension methods for dependency injection and ASP.NET Core pipeline.
+
 [![NuGet](https://img.shields.io/nuget/v/EntityFrameworkCore.SqlServer.Seeding.svg)](https://www.nuget.org/packages/EntityFrameworkCore.SqlServer.Seeding)
 ```
 dotnet add package EntityFrameworkCore.SqlServer.Seeding
@@ -40,6 +41,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 ### Adding new seeding script
 As a first step you need to install global tool [EntityFrameworkCore.SqlServer.Seeding.Tool](https://www.nuget.org/packages/EntityFrameworkCore.SqlServer.Seeding.Tool/) which will help you add the seeding script to the project where you want to have your seeding scripts.
 I usually keep them together with migrations as a part of infrastructure.
+
 [![NuGet](https://img.shields.io/nuget/v/EntityFrameworkCore.SqlServer.Seeding.Tool.svg)](https://www.nuget.org/packages/EntityFrameworkCore.SqlServer.Seeding.Tool)
 ```
 dotnet tool install --global EntityFrameworkCore.SqlServer.Seeding.Tool 
