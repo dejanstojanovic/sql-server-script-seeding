@@ -2,7 +2,7 @@
   "profiles": {
     "EntityFrameworkCore.SqlServer.Seeding.Tool": {
       "commandName": "Project",
-      "commandLineArgs": "add Sample1 -o Seedings",
+      "commandLineArgs": "add Sample2 -o Seedings",
       "workingDirectory": "C:\\Work\\GitHub\\sql-server-script-seeding\\src\\Sample\\Sample.Seeding.Data.Infrastructure"
     }
   }

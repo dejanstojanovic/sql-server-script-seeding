@@ -98,7 +98,7 @@ namespace EntityFrameworkCore.SqlServer.Seeding.Tool
 
                         XmlDocument doc = new XmlDocument();
                         doc.Load(projectFilename);
-                        var node = doc.SelectSingleNode("/Project/ItemGroup[@Label=seeding]");
+                        var node = doc.SelectSingleNode("/Project/ItemGroup[@Label=\"seeding\"]");
                         if (node == null)
                         {
                             node = doc.CreateElement("ItemGroup");
