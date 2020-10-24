@@ -65,14 +65,14 @@ As a first step you need to install global tool [EntityFrameworkCore.SqlServer.S
 I usually keep them together with migrations as a part of infrastructure.
 
 [![NuGet](https://img.shields.io/nuget/v/EntityFrameworkCore.SqlServer.Seeding.Tool.svg)](https://www.nuget.org/packages/EntityFrameworkCore.SqlServer.Seeding.Tool)
-```
+```bash
 dotnet tool install --global EntityFrameworkCore.SqlServer.Seeding.Tool 
 ```
 
 From a command line (cmd, PowerShell, bash…) navigate to project folder where you want your scripts to sit.
 Simply add the script by invoking the previously installed global tool
 
-```
+```bash
 seeding add "Add_Initial_Employees" -o Seedings
 ```
 
