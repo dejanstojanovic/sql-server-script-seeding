@@ -1,3 +1,4 @@
+![](https://raw.githubusercontent.com/dejanstojanovic/sql-server-script-seeding/master/src/EntityFrameworkCore.SqlServer.Seeding/icon.png)
 
 # SQL Server script seeding for Entity Framework Core
 
