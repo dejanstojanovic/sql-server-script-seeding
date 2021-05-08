@@ -26,7 +26,7 @@
 
     <!-- Generate NuGet package (.nupkg) file in output (bin) folder on build -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
