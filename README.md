@@ -1,12 +1,17 @@
+
 ![](https://raw.githubusercontent.com/dejanstojanovic/sql-server-script-seeding/master/src/EntityFrameworkCore.SqlServer.Seeding/icon.png)
 
 # SQL Server script seeding for Entity Framework Core
 
+Data seeding is an important step in development process as it provides data for basic functional testing during development. However, data seeding may be also an integral part of the deployment where pre defined data such as lookups etc. may need to present on all environments where the application is deployed.
+
+There are different ways of doing it and one of them is just use T-SQL script for SQL Server.
+
 ## Overview
 
-Allows you to seed the data to SQL Server database using pure SQL scripts but in a managed fashion similar to Entity Framework Core migrations.
-More details on the logic how seeding works you can read in [Seeding data in EF Core using SQL scripts](https://dejanstojanovic.net/aspnet/2020/september/seeding-data-in-ef-core-using-sql-scripts/) article.
-Details about the global tool logic can be found in article [Building and using advanced .NET Core CLI global tools](https://dejanstojanovic.net/aspnet/2020/september/building-and-using-advanced-net-core-cli-global-tools/).
+This package allows you to seed the data to SQL Server database using pure T-SQL scripts but in a managed fashion similar to Entity Framework Core migrations.
+
+It makes your scripts part of the project and it also allows you to add new scripts by using IDE or in more managed way by CLI which comes as an additional cross-platform .NET Core global tool package. 
 
 ## Usage
 ### Invoking the seeding
@@ -45,7 +50,7 @@ Seeding scripts can be added either **manually from IDE** or **using CLI tool**.
 
 #### Adding seeding script manually
 
-To add script manualy you need to create new .sql file in your porject and mark it as embeded resource. Make sure that your file name starts with timestamp in format **yyyyMMddHHss**. Here is a sample of a seedign SQL script:
+To add script manually you need to create new .sql file in your project and mark it as embedder resource. Make sure that your file name starts with timestamp in format **yyyyMMddHHss**. Here is a sample of a seeding SQL script:
 
 ```xml
   <ItemGroup Label="seeding">
@@ -54,23 +59,23 @@ To add script manualy you need to create new .sql file in your porject and mark 
   </ItemGroup>
 ```
 
-#### Adding seedign script via CLI
+#### Adding seeding script via CLI
 
 As a first step you need to install global tool [EntityFrameworkCore.SqlServer.Seeding.Tool](https://www.nuget.org/packages/EntityFrameworkCore.SqlServer.Seeding.Tool/) which will help you add the seeding script to the project where you want to have your seeding scripts.
 I usually keep them together with migrations as a part of infrastructure.
 
 [![NuGet](https://img.shields.io/nuget/v/EntityFrameworkCore.SqlServer.Seeding.Tool.svg)](https://www.nuget.org/packages/EntityFrameworkCore.SqlServer.Seeding.Tool)
-```
+```bash
 dotnet tool install --global EntityFrameworkCore.SqlServer.Seeding.Tool 
 ```
 
 From a command line (cmd, PowerShell, bash…) navigate to project folder where you want your scripts to sit.
 Simply add the script by invoking the previously installed global tool
 
-```
+```bash
 seeding add "Add_Initial_Employees" -o Seedings
 ```
 
 This will create new file under Seedings folder in your project tree.
-Once you run the main project, seeding files will be executed and recorded in __SeedingHistory table
+Once you run the main project, seeding files will be executed and recorded in **__SeedingHistory** table
 
