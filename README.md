@@ -28,7 +28,19 @@ Add script seeding to services collection and supply the connection string to th
 public void ConfigureServices(IServiceCollection services)
 {
 	...
-	services.AddScriptSeeding(Configuration.GetConnectionString("EmployeesDatabase"));
+            var connectionString = Configuration.GetConnectionString("EmployeesDatabase");
+            services.AddDbContext<EmployeesDatabaseContext>(options =>
+            {
+                options.UseSqlServer(connectionString,
+                    x =>
+                    {
+                        x.MigrationsHistoryTable("__EFMigrationsHistory");
+                        x.MigrationsAssembly(typeof(EmployeesDatabaseContext).Assembly.GetName().Name);
+                    }
+                );
+            });
+
+            services.AddScriptSeeding(connectionString, typeof(DbContextExtensions).Assembly, "Seedings");
 	...
 }
 ```
@@ -39,7 +51,16 @@ Invoke the seeding in the pipeline by supplying the assembly where your scripts 
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
 	...
-    app.SeedFromScripts(typeof(EmployeesDatabaseContext).Assembly, "Seedings");
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<EmployeesDatabaseContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
+            app.SeedFromScripts();
 	...
 }
 ```

@@ -21,12 +21,12 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
                     x =>
                     {
                         x.MigrationsHistoryTable("__EFMigrationsHistory");
-                        x.MigrationsAssembly(typeof(DbContextExtensions).Assembly.GetName().Name);
+                        x.MigrationsAssembly(typeof(EmployeesDatabaseContext).Assembly.GetName().Name);
                     }
                 );
             });
 
-            services.AddScriptSeeding(connectionString, typeof(DbContextExtensions).Assembly, "Seedings");
+            services.AddScriptSeeding(connectionString, typeof(EmployeesDatabaseContext).Assembly, "Seedings");
         }
 
         public static void MigrateEmployeesData(this IApplicationBuilder app, IConfiguration configuration)
