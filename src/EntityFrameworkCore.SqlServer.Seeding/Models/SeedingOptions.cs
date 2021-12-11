@@ -23,7 +23,7 @@ namespace EntityFrameworkCore.SqlServer.Seeding.Models
         public SeedingOptions(string scriptsFolder, Assembly scriptsAssembly)
         {
             _scriptsFolder = scriptsFolder;
-            _scriptsFolder = scriptsFolder;
+            _scriptsAssembly = scriptsAssembly;
         }
     }
 }

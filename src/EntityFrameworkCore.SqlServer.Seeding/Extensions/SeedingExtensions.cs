@@ -30,11 +30,26 @@ namespace EntityFrameworkCore.SqlServer.Seeding.Extensions
         /// Enables script seeding
         /// </summary>
         /// <param name="services">Services collection</param>
+        /// <param name="connectionString">Database connection string</param>
         /// <param name="scriptsFolder">Scripts folder inside scripts assembly</param>
         /// <param name="seedingAssembly">Assembly containing seeding scripts</param>
-        public static void AddScriptSeeding(this IServiceCollection services, Assembly seedingAssembly, String scriptsFolder)
+        public static void AddScriptSeeding(
+            this IServiceCollection services,
+            string connectionString,
+            Assembly seedingAssembly,
+            String scriptsFolder)
         {
-            services.Configure<SeedingOptions>(OptionsNames.OPTIONS_SEEDING, o => new SeedingOptions(scriptsFolder, seedingAssembly));
+            services.AddDbContext<SeedingDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString,
+                    x =>
+                    {
+                        x.MigrationsAssembly(typeof(SeedingExtensions).Assembly.GetName().Name);
+                    }
+                );
+            });
+
+            services.AddSingleton<SeedingOptions>(o => new SeedingOptions(scriptsFolder, seedingAssembly));
             services.AddTransient<ISeeder, Seeder>();
         }
 

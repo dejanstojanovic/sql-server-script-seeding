@@ -12,11 +12,12 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
 {
     public static class DbContextExtensions
     {
-        public static void AddEmployeesDbContext(this IServiceCollection services, IConfiguration configuration)
+        public static void AddEmployeesData(this IServiceCollection services, IConfiguration configuration)
         {
+            var connectionString = configuration.GetConnectionString(DbContextConfigConstants.DB_CONNECTION_CONFIG_NAME);
             services.AddDbContext<EmployeesDatabaseContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString(DbContextConfigConstants.DB_CONNECTION_CONFIG_NAME),
+                options.UseSqlServer(connectionString,
                     x =>
                     {
                         x.MigrationsHistoryTable("__EFMigrationsHistory");
@@ -24,7 +25,8 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
                     }
                 );
             });
-            services.AddScriptSeeding(typeof(DbContextExtensions).Assembly, "Seedings");
+
+            services.AddScriptSeeding(connectionString, typeof(DbContextExtensions).Assembly, "Seedings");
         }
 
         public static void MigrateEmployeesData(this IApplicationBuilder app, IConfiguration configuration)

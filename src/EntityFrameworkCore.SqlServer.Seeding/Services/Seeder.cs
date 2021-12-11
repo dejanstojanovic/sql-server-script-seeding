@@ -15,13 +15,15 @@ namespace EntityFrameworkCore.SqlServer.Seeding.Services
         readonly SeedingDbContext _context;
         readonly SeedingOptions _seedingOptions;
         readonly string _filePrefix;
-        public Seeder(SeedingDbContext context, IOptions<SeedingOptions> options)
+        public Seeder(SeedingDbContext context, SeedingOptions options)
         {
             _context = context;
-            _seedingOptions = options.Value;
-            _filePrefix = $"{_seedingOptions.ScriptsAssembly.GetName().Name}.";
+            _seedingOptions = options;
+            _filePrefix = $"{_seedingOptions.ScriptsAssembly.GetName().Name}";
             if (!string.IsNullOrWhiteSpace(_seedingOptions.ScriptsFolder))
-                _filePrefix = string.Concat($"{_seedingOptions.ScriptsFolder}.");
+                _filePrefix = $"{_filePrefix}.{_seedingOptions.ScriptsFolder}.";
+
+            context.Database.Migrate();
         }
 
         /// <inheritdoc/>
@@ -57,8 +59,7 @@ namespace EntityFrameworkCore.SqlServer.Seeding.Services
         /// <inheritdoc/>
         public IEnumerable<string> GetAllScripts()
         {
-            var assembly = this.GetType().Assembly;
-            var scriptFiles = assembly.GetManifestResourceNames()
+            var scriptFiles = _seedingOptions.ScriptsAssembly.GetManifestResourceNames()
                                 .Where(f => f.StartsWith(_filePrefix) && f.EndsWith(".sql"))
                                                               .Select(f => f.Replace(_filePrefix, String.Empty))
                                                               .OrderBy(f => f)
@@ -90,14 +91,15 @@ namespace EntityFrameworkCore.SqlServer.Seeding.Services
         /// <inheritdoc/>
         public string GetScript(string fileName)
         {
-            var assembly = this.GetType().Assembly;
             if (!fileName.StartsWith(_filePrefix))
                 fileName = string.Concat(_filePrefix, fileName);
 
-            using (Stream stream = assembly.GetManifestResourceStream(fileName))
-            using (StreamReader reader = new StreamReader(stream))
+            using (Stream stream = _seedingOptions.ScriptsAssembly.GetManifestResourceStream(fileName))
             {
-                return reader.ReadToEnd();
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
             }
         }
     }

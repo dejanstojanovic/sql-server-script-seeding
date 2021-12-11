@@ -23,7 +23,7 @@ namespace Sample.Seeding.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddEmployeesDbContext(Configuration);
+            services.AddEmployeesData(Configuration);
 
             services.AddControllers();
         }
