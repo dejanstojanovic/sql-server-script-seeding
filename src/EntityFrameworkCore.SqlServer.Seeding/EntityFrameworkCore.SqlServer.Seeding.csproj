@@ -5,7 +5,7 @@
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildThisFileName).xml</DocumentationFile>
     <ProjectGuid>{F4F0A1E5-CE1F-40C8-A099-22E368A1AE11}</ProjectGuid>
     <PackageId>EntityFrameworkCore.SqlServer.Seeding</PackageId>
-    <Version>5.1.0</Version>
+    <Version>5.0.12</Version>
     <Authors>Dejan Stojanovic</Authors>
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://bit.ly/3k6FUC9</PackageIconUrl>
