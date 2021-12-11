@@ -1,4 +1,5 @@
-﻿using EntityFrameworkCore.SqlServer.Seeding.Models;
+﻿using EntityFrameworkCore.SqlServer.Seeding.Entities;
+using EntityFrameworkCore.SqlServer.Seeding.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

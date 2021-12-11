@@ -1,5 +1,5 @@
 ﻿using EntityFrameworkCore.SqlServer.Seeding.Configurations;
-using EntityFrameworkCore.SqlServer.Seeding.Models;
+using EntityFrameworkCore.SqlServer.Seeding.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EntityFrameworkCore.SqlServer.Seeding

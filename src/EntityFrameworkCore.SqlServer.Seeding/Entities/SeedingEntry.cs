@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EntityFrameworkCore.SqlServer.Seeding.Models
+namespace EntityFrameworkCore.SqlServer.Seeding.Entities
 {
     /// <summary>
     /// Seeding history entry
