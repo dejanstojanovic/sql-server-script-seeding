@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EntityFrameworkCore.SqlServer.Seeding.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
                     }
                 );
             });
+            services.AddScriptSeeding(typeof(DbContextExtensions).Assembly, "Seedings");
         }
 
         public static void MigrateEmployeesData(this IApplicationBuilder app, IConfiguration configuration)
@@ -36,6 +38,7 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
                     context.Database.Migrate();
                 }
             }
+            app.SeedFromScripts();
         }
     }
 }
