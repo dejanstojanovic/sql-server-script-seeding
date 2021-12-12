@@ -27,10 +27,10 @@ Add script seeding to services collection and supply the connection string to th
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-	...
-            var connectionString = Configuration.GetConnectionString("EmployeesDatabase");
-            services.AddDbContext<EmployeesDatabaseContext>(options =>
-            {
+    ...
+    var connectionString = Configuration.GetConnectionString("EmployeesDatabase");
+    services.AddDbContext<EmployeesDatabaseContext>(options =>
+           {
                 options.UseSqlServer(connectionString,
                     x =>
                     {
@@ -40,28 +40,28 @@ public void ConfigureServices(IServiceCollection services)
                 );
             });
 
-            services.AddScriptSeeding(connectionString, typeof(DbContextExtensions).Assembly, "Seedings");
-	...
+    services.AddScriptSeeding(connectionString, typeof(DbContextExtensions).Assembly, "Seedings");
+    ...
 }
 ```
 
 Invoke the seeding in the pipeline by supplying the assembly where your scripts are sitting along with a folder under which scripts sit under project tree. The default value is "Seedings"
 
 ```csharp
-public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+public void Configure(IApplicationBuilder app)
 {
-	...
-            using (var serviceScope = app.ApplicationServices
-                .GetRequiredService<IServiceScopeFactory>()
-                .CreateScope())
+    ...
+    using (var serviceScope = app.ApplicationServices
+        .GetRequiredService<IServiceScopeFactory>()
+        .CreateScope())
             {
                 using (var context = serviceScope.ServiceProvider.GetService<EmployeesDatabaseContext>())
                 {
                     context.Database.Migrate();
                 }
             }
-            app.SeedFromScripts();
-	...
+    app.SeedFromScripts();
+    ...
 }
 ```
 
@@ -100,3 +100,45 @@ seeding add "Add_Initial_Employees" -o Seedings
 This will create new file under Seedings folder in your project tree.
 Once you run the main project, seeding files will be executed and recorded in **__SeedingHistory** table
 
+### What's new in 5.0.12
+Added support for:
+- Getting a list of all scripts
+- Getting a list of pending scripts
+- Getting a list of already executed scripts
+- Getting the content of a specific script
+- Executing specific script
+- Executing pending scripts
+
+These changes are introduced in order to support selective execution seeding as in the following example:
+```csharp
+public void Configure(IApplicationBuilder app)
+{
+    ...
+    using (var serviceScope = app.ApplicationServices
+        .GetRequiredService<IServiceScopeFactory>()
+        .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<EmployeesDatabaseContext>())
+                {
+                    var migrator = context.Database.GetService<IMigrator>();
+                    var migrations = context.Database.GetPendingMigrations();
+                    var seeder = serviceScope.ServiceProvider.GetService<ISeeder>();
+                    var seeds = seeder.GetPendingScripts();
+
+                    var commands = migrations.Concat(seeds).OrderBy(c => c).ToList();
+
+                    if (commands != null && commands.Any())
+                    {
+                        foreach (var command in commands)
+                        {
+                            if (command.EndsWith(".sql"))
+                                seeder.ExecuteScript(command);
+                            else
+                                migrator.Migrate(command);
+                        }
+                    }
+                }
+            }
+    ...
+}
+```

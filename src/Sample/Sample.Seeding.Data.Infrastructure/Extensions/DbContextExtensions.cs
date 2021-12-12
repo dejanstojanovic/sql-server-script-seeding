@@ -1,6 +1,9 @@
 ﻿using EntityFrameworkCore.SqlServer.Seeding.Extensions;
+using EntityFrameworkCore.SqlServer.Seeding.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sample.Seeding.Data.Infrastructure.Constants;
