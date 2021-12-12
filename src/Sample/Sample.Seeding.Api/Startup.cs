@@ -23,9 +23,7 @@ namespace Sample.Seeding.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddScriptSeeding(Configuration.GetConnectionString("EmployeesDatabase"));
-
-            services.AddEmployeesDbContext(Configuration);
+            services.AddEmployeesData(Configuration);
 
             services.AddControllers();
         }
@@ -39,8 +37,6 @@ namespace Sample.Seeding.Api
             }
 
             app.MigrateEmployeesData(Configuration);
-
-            app.SeedFromScripts(typeof(EmployeesDatabaseContext).Assembly, "Seedings");
 
             app.UseHttpsRedirection();
             app.UseRouting();

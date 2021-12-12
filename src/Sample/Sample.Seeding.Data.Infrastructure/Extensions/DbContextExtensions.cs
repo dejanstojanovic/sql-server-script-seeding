@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EntityFrameworkCore.SqlServer.Seeding.Extensions;
+using EntityFrameworkCore.SqlServer.Seeding.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sample.Seeding.Data.Infrastructure.Constants;
@@ -11,18 +15,21 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
 {
     public static class DbContextExtensions
     {
-        public static void AddEmployeesDbContext(this IServiceCollection services, IConfiguration configuration)
+        public static void AddEmployeesData(this IServiceCollection services, IConfiguration configuration)
         {
+            var connectionString = configuration.GetConnectionString(DbContextConfigConstants.DB_CONNECTION_CONFIG_NAME);
             services.AddDbContext<EmployeesDatabaseContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString(DbContextConfigConstants.DB_CONNECTION_CONFIG_NAME),
+                options.UseSqlServer(connectionString,
                     x =>
                     {
                         x.MigrationsHistoryTable("__EFMigrationsHistory");
-                        x.MigrationsAssembly(typeof(DbContextExtensions).Assembly.GetName().Name);
+                        x.MigrationsAssembly(typeof(EmployeesDatabaseContext).Assembly.GetName().Name);
                     }
                 );
             });
+
+            services.AddScriptSeeding(connectionString, typeof(EmployeesDatabaseContext).Assembly, "Seedings");
         }
 
         public static void MigrateEmployeesData(this IApplicationBuilder app, IConfiguration configuration)
@@ -34,6 +41,36 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
                 using (var context = serviceScope.ServiceProvider.GetService<EmployeesDatabaseContext>())
                 {
                     context.Database.Migrate();
+                }
+            }
+            app.SeedFromScripts();
+        }
+
+        public static void MigrateAndSeedEmployeesData(this IApplicationBuilder app, IConfiguration configuration)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<EmployeesDatabaseContext>())
+                {
+                    var migrator = context.Database.GetService<IMigrator>();
+                    var migrations = context.Database.GetPendingMigrations();
+                    var seeder = serviceScope.ServiceProvider.GetService<ISeeder>();
+                    var seeds = seeder.GetPendingScripts();
+
+                    var commands = migrations.Concat(seeds).OrderBy(c => c).ToList();
+
+                    if (commands != null && commands.Any())
+                    {
+                        foreach (var command in commands)
+                        {
+                            if (command.EndsWith(".sql"))
+                                seeder.ExecuteScript(command);
+                            else
+                                migrator.Migrate(command);
+                        }
+                    }
                 }
             }
         }

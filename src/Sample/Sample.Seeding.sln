@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30611.23
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFrameworkCore.SqlServer.Seeding", "..\EntityFrameworkCore.SqlServer.Seeding\EntityFrameworkCore.SqlServer.Seeding.csproj", "{F4F0A1E5-CE1F-40C8-A099-22E368A1AE11}"
 EndProject
@@ -14,6 +14,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Seeding.Data.Infrastructure", "Sample.Seeding.Data.Infrastructure\Sample.Seeding.Data.Infrastructure.csproj", "{66366E18-A534-4637-8984-DB82573A2302}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Seeding.Api", "Sample.Seeding.Api\Sample.Seeding.Api.csproj", "{7951B3A2-B68C-4229-A5A6-CDEF2821DFF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2027AB2B-4E07-481D-AF9A-179C5F010A93}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\.azure\azure-pipeline-seeding-package.yml = ..\..\.azure\azure-pipeline-seeding-package.yml
+		..\..\.azure\azure-pipeline-seeding-tool-package.yml = ..\..\.azure\azure-pipeline-seeding-tool-package.yml
+		..\..\README.md = ..\..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
