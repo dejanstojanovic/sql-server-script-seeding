@@ -42,5 +42,34 @@ namespace Sample.Seeding.Data.Infrastructure.Extensions
             }
             app.SeedFromScripts();
         }
+
+        public static void MigrateAndSeedEmployeesData(this IApplicationBuilder app, IConfiguration configuration)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<EmployeesDatabaseContext>())
+                {
+                    var migrator = context.Database.GetService<IMigrator>();
+                    var migrations = context.Database.GetPendingMigrations();
+                    var seeder = serviceScope.ServiceProvider.GetService<ISeeder>();
+                    var seeds = seeder.GetPendingScripts();
+
+                    var commands = migrations.Concat(seeds).OrderBy(c => c).ToList();
+
+                    if (commands != null && commands.Any())
+                    {
+                        foreach (var command in commands)
+                        {
+                            if (command.EndsWith(".sql"))
+                                seeder.ExecuteScript(command);
+                            else
+                                migrator.Migrate(command);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

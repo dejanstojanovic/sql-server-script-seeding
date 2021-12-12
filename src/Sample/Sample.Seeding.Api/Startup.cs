@@ -38,8 +38,6 @@ namespace Sample.Seeding.Api
 
             app.MigrateEmployeesData(Configuration);
 
-            
-
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
