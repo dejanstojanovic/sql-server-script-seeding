@@ -1,25 +1,24 @@
 ﻿using EntityFrameworkCore.SqlServer.Seeding.Configurations;
 using EntityFrameworkCore.SqlServer.Seeding.Entities;
+
 using Microsoft.EntityFrameworkCore;
 
-namespace EntityFrameworkCore.SqlServer.Seeding
+namespace EntityFrameworkCore.SqlServer.Seeding;
+
+/// <inheritdoc />
+public class SeedingDbContext : DbContext
 {
-    public class SeedingDbContext:DbContext
-    {
-        public SeedingDbContext() : base()
-        {
+	/// <inheritdoc />
+	public SeedingDbContext() : base() { }
 
-        }
+	/// <inheritdoc />
+	public SeedingDbContext(DbContextOptions<SeedingDbContext> options) : base(options) { }
 
-        public SeedingDbContext(DbContextOptions<SeedingDbContext> options) : base(options)
-        {
-        }
+	/// <inheritdoc />
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.ApplyConfiguration(new SeedingEntryConfiguration());
+	}
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new SeedingEntryConfiguration());
-            
-        }
-        internal virtual DbSet<SeedingEntry> SeedingEntries { get; set; }
-    }
+	internal virtual DbSet<SeedingEntry> SeedingEntries { get; set; }
 }

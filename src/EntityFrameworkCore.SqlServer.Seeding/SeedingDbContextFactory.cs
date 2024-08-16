@@ -1,24 +1,24 @@
-﻿using EntityFrameworkCore.SqlServer.Seeding;
+﻿using System.IO;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 
-namespace Sample.Seeding.Data.Infrastructure
+namespace EntityFrameworkCore.SqlServer.Seeding;
+
+/// <inheritdoc />
+public class SeedingDbContextFactory : IDesignTimeDbContextFactory<SeedingDbContext>
 {
-    public class SeedingDbContextFactory : IDesignTimeDbContextFactory<SeedingDbContext>
-    {
-
-        public SeedingDbContext CreateDbContext(string[] args)
-        {
-            var dbContext = new SeedingDbContext(new DbContextOptionsBuilder<SeedingDbContext>().UseSqlServer(
-                 new ConfigurationBuilder()
-                     .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), $"appsettings.json"))
-                     .Build()
-                     .GetConnectionString("SeedingDatabase")
-                 ).Options);
-            dbContext.Database.Migrate();
-            return dbContext;
-        }
-    }
+	/// <inheritdoc />
+	public SeedingDbContext CreateDbContext(string[] args)
+	{
+		var dbContext = new SeedingDbContext(new DbContextOptionsBuilder<SeedingDbContext>().UseSqlServer(
+			new ConfigurationBuilder()
+				.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), $"appsettings.json"))
+				.Build()
+				.GetConnectionString("SeedingDatabase")
+		).Options);
+		dbContext.Database.Migrate();
+		return dbContext;
+	}
 }
